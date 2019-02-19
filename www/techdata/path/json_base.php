@@ -1,2 +1,0 @@
-<? header('Access-Control-Allow-Origin:*');
-header('Content-Type: application/json'); ?>{"BKK":<?=Phone::model()->count(" base = 'BKK' ")?>,"NST":<?=Phone::model()->count(" base = 'NST' ")?>,"UTP":<?=Phone::model()->count(" base = 'UTP' ")?>}

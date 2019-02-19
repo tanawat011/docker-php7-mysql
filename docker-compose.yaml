@@ -1,32 +1,28 @@
-version: '2'
-
+version: "2"
 services:
-  php:
-    # image: php:7-apache
-    build: ./
-    container_name: yii_php7_apache
-    restart: always
-    volumes:
-      - ./www/:/var/www/html/
-    ports:
-      - 5555:9000
-
   db:
-    image: mariadb:latest
-    container_name: yii_mariadb
+    image: mariadb:10.1
+    container_name: lemp_mariadb
     restart: always
     volumes:
       - ./mysql/initdb/:/docker-entrypoint-initdb.d
       - ./mysql/data/:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_ROOT_PASSWORD=123132123
       - MYSQL_DATABASE=lemp_db
-      - MYSQL_USER=admin
-      - MYSQL_PASSWORD=admin
-
+      - MYSQL_USER=lemp
+      - MYSQL_PASSWORD=123456
+  php:
+    build: ./
+    container_name: lemp_php-fpm
+    restart: always
+    volumes:
+      - ./www/:/var/www/html
+    expose:
+      - "9000"
   nginx:
     image: nginx:alpine
-    container_name: yii_nginx
+    container_name: lemp_nginx
     restart: always
     volumes:
       - ./nginx/conf/nginx.conf:/etc/nginx/conf/nginx.conf:ro
@@ -35,54 +31,3 @@ services:
       - php
     ports:
       - 80:80
-
-  pma:
-    depends_on:
-      - db
-    image: phpmyadmin/phpmyadmin
-    container_name: yii_phpmyadmin
-    restart: always
-    links:
-      - db:db
-    ports:
-      - 5556:80
-
-# services:
-#   db:
-#     #image: mysql
-#     image: mysql
-#     container_name: techdataDB
-#     restart: always
-#     volumes:
-#       - ./db_data:/var/lib/mysql
-#     environment:
-#       MYSQL_ROOT_PASSWORD: example
-#       MYSQL_DATABASE: techdata
-
-#   web:
-#     # image: ./
-#     build: ./
-#     container_name: php_web
-#     depends_on:
-#       - db
-#     # volumes:
-#     #   - ./php/:/var/www/html/
-#     #   - ./php_config/php.ini:/usr/local/etc/php/php.ini
-#     ports:
-#       - 5555:80
-#     # stdin_open: true
-#     # tty: true
-
-#   pma:
-#     depends_on:
-#       - db
-#     image: phpmyadmin/phpmyadmin
-#     container_name: lib-phpmyadmin
-#     restart: always
-#     links:
-#       - db:db
-#     ports:
-#       - 5556:80
-# volumes:
-#   db_data:
-#     driver: local
